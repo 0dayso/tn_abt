@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuniu.abt.mapper.AbtRefundItemMapper">
+  <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtRefundItem">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="refund_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="order_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="ticket_main_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="refund_item_type" javaType="java.lang.Integer" jdbcType="BIT" />
+      <arg column="leg" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="person_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="pnr_passenger_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="real_refund_amount" javaType="java.lang.Float" jdbcType="DECIMAL" />
+      <arg column="refund_amount" javaType="java.lang.Float" jdbcType="DECIMAL" />
+      <arg column="commission_fee" javaType="java.lang.Float" jdbcType="DECIMAL" />
+      <arg column="ticket_no" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="pnr" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="remark" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="BIT" />
+      <arg column="add_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    id, refund_id, order_id, ticket_main_id, refund_item_type, leg, person_id, pnr_passenger_id, 
+    real_refund_amount, refund_amount, commission_fee, ticket_no, pnr, remark, status, 
+    add_time, update_time
+  </sql>
+</mapper>

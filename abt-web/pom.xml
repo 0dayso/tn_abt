@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>abt</artifactId>
+    <packaging>war</packaging>
+    <parent>
+        <groupId>com.tuniu.abt</groupId>
+        <artifactId>abt-pom</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../abt-pom/pom.xml</relativePath>
+    </parent>
+    <dependencies>
+        <dependency>
+            <groupId>com.tuniu.abt</groupId>
+            <artifactId>abt-intf</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tuniu.abt</groupId>
+            <artifactId>abt-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tuniu.operation.platform</groupId>
+            <artifactId>llt-client</artifactId>
+            <version>0.2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <charset>UTF-8</charset>
+                    <port>8081</port>
+                    <path>/${project.build.finalName}</path>
+                    <systemProperties>
+                        <java.rmi.server.hostname>127.0.0.1</java.rmi.server.hostname>
+                        <com.sun.management.jmxremote.port>1099</com.sun.management.jmxremote.port>
+                        <com.sun.management.jmxremote.ssl>false</com.sun.management.jmxremote.ssl>
+                        <com.sun.management.jmxremote.authenticate>false</com.sun.management.jmxremote.authenticate>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <warName>${project.artifactId}</warName>
+                    <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+                    <webResources>
+                        <resource>
+                            <directory>src/main/webapp</directory>
+                            <filtering>true</filtering>
+                            <includes>
+                                <include>**/*.html</include>
+                                <include>**/*.js</include>
+                                <include>**/*.css</include>
+                                <include>**/*.xml</include>
+                            </includes>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+            <!-- unit test -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.16</version>
+                <configuration>
+                    <testNGArtifactName>org.testng:testng</testNGArtifactName>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>${basedir}/src/test/resources/testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
+            </plugin>
+        </plugins>
+        <finalName>abt</finalName>
+    </build>
+</project>

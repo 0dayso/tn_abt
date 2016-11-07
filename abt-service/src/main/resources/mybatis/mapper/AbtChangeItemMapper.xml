@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuniu.abt.mapper.AbtChangeItemMapper" >
+  <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtChangeItem" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="change_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="order_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="ticket_main_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="ticket_no" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="change_fee" jdbcType="DECIMAL" javaType="java.lang.Float" />
+      <arg column="upgradeFee" jdbcType="DECIMAL" javaType="java.lang.Float" />
+      <arg column="commissionFee" jdbcType="DECIMAL" javaType="java.lang.Float" />
+      <arg column="pnr" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="new_pnr" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="leg" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="person_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="pnr_passenger_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="new_person_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="new_segments" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="remark" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="add_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    id, change_id, order_id, ticket_main_id, ticket_no, change_fee, upgradeFee, commissionFee, 
+    pnr, new_pnr, leg, person_id, pnr_passenger_id, new_person_id, new_segments, remark, 
+    add_time, update_time
+  </sql>
+</mapper>

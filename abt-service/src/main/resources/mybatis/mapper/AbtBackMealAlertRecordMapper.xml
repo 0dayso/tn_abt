@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuniu.abt.mapper.AbtBackMealAlertRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtBackMealAlertRecord" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="back_meal_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="alert_type" jdbcType="TINYINT" javaType="java.lang.Integer" />
+      <arg column="add_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    id, back_meal_id, alert_type, add_time
+  </sql>
+</mapper>

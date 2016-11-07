@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="CobarTestSuite" verbose="2">
+	<test name="IndependentTests" parallel="tests">
+		<classes>
+			
+		</classes>
+	</test>
+</suite>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuniu.abt.mapper.AbtAopPolicyMapper" >
+  <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtAopPolicy">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="vendor_id" javaType="java.lang.Integer" jdbcType="BIT" />
+      <arg column="ticketing_office_no" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="ticketing_account_no" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="ticketing_account_pwd" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="supplier_office_no" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="change_pnr_flag" javaType="java.lang.Integer" jdbcType="BIT" />
+      <arg column="policy_effective_flag" javaType="java.lang.Integer" jdbcType="BIT" />
+      <arg column="actual_ticketing_office_no" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="sub_vendor_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="sub_vendor_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="del_flag" javaType="java.lang.Integer" jdbcType="BIT" />
+      <arg column="add_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    id, vendor_id, ticketing_office_no, ticketing_account_no, ticketing_account_pwd,
+    supplier_office_no, change_pnr_flag, policy_effective_flag, actual_ticketing_office_no,
+    sub_vendor_id, sub_vendor_name, del_flag, add_time, update_time
+  </sql>
+
+  <sql id="Prefix_Column_List">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    ap.id, ap.vendor_id, ap.ticketing_office_no, ap.ticketing_account_no, ap.ticketing_account_pwd,
+    ap.supplier_office_no, ap.change_pnr_flag, ap.policy_effective_flag, ap.actual_ticketing_office_no,
+    ap.sub_vendor_id, ap.sub_vendor_name, ap.del_flag, ap.add_time, ap.update_time
+  </sql>
+
+  <select id="findByPnrAndOrderId" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Prefix_Column_List"/>
+    FROM
+    abt_aop_policy ap
+    INNER JOIN
+    abt_pnr_main m
+    ON
+    ap.id = m.policy_id
+    where
+    m.order_id = #{orderId, jdbcType=BIGINT}
+    AND
+    m.pnr = #{pnr, jdbcType=VARCHAR}
+  </select>
+
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuniu.abt.mapper.AbtBookingRequestMapper">
+  <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtBookingRequest">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="order_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="session_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="system_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
+      <arg column="vendor_id" javaType="java.lang.Integer" jdbcType="TINYINT" />
+      <arg column="flight_item_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="BIT" />
+      <arg column="back_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="call_back_status" javaType="java.lang.Integer" jdbcType="BIT" />
+      <arg column="add_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    id, order_id, session_id, system_id, vendor_id, flight_item_id, status, back_time, 
+    call_back_status, add_time, update_time
+  </sql>
+  
+  <select id="queryCurDateRequestsByStatus" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    abt_booking_request t
+    WHERE
+    t.status = #{status}
+    AND
+    TO_DAYS(t.add_Time) = TO_DAYS(NOW())
+  </select>
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuniu.abt.mapper.AbtChangeOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtChangeOrder" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <constructor >
+      <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="order_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="flight_item_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+      <arg column="session_id" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="aop_order" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="aop_change_order" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="change_type" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="refund_source" jdbcType="CHAR" javaType="java.lang.String" />
+      <arg column="failure_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="remark" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="total_amount" jdbcType="DECIMAL" javaType="java.lang.Float" />
+      <arg column="ctrip_order_id" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="status" jdbcType="BIT" javaType="java.lang.Integer" />
+      <arg column="add_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    <!--
+      WARNING - @mbggenerated
+    -->
+    id, order_id, flight_item_id, session_id, aop_order, aop_change_order, change_type, 
+    refund_source, failure_time, remark, total_amount, ctrip_order_id, status, add_time, 
+    update_time
+  </sql>
+</mapper>

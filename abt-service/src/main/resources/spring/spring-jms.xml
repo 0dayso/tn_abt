@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- broker -->
+    <bean id="commonFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL"
+                  value="failover://$[broker.address]?randomize=false&amp;jms.useAsyncSend=true">
+        </property>
+    </bean>
+
+    <!-- send -->
+    <bean id="poolSendConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="stop">
+        <property name="connectionFactory" ref="commonFactory"/>
+        <property name="maximumActive" value="1"/>
+    </bean>
+
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="poolSendConnectionFactory"/>
+        <property name="defaultDestinationName" value="$[jms.abt.ticketOrder.queue]"/>
+        <property name="deliveryPersistent" value="true"/>
+        <property name="pubSubDomain" value="false"/>
+        <property name="explicitQosEnabled" value="true"/>
+        <property name="timeToLive" value="604800000"/>
+    </bean>
+
+</beans>

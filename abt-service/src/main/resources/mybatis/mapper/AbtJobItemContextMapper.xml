@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuniu.abt.mapper.AbtJobItemContextMapper">
+    <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtJobItemContext">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="job_name" property="jobName" jdbcType="VARCHAR"/>
+        <result column="max_retry_count" property="maxRetryCount" jdbcType="INTEGER"/>
+        <result column="add_time" property="addTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, job_name, max_retry_count, add_time, update_time
+    </sql>
+
+</mapper>

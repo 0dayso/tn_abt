@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>开放平台 - 工具集 - SOLR数据维护</title>
+    <link rel="stylesheet" href="http://libs.useso.com/js/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://libs.useso.com/js/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <script src="../../js/setting.js"></script>
+    <script src="../../js/base64.js"></script>
+
+    <script src="http://libs.useso.com/js/jquery/2.1.0/jquery.js"></script>
+    <script src="http://libs.useso.com/js/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script>
+        Date.prototype.formatDate = function(fmt) {
+            var o = {
+                "M+" : this.getMonth()+1,                 //月份
+                "d+" : this.getDate(),                    //日
+                "H+" : this.getHours(),                   //小时
+                "m+" : this.getMinutes(),                 //分
+                "s+" : this.getSeconds(),                 //秒
+                "q+" : Math.floor((this.getMonth()+3)/3), //季度
+                "S"  : this.getMilliseconds()             //毫秒
+            };
+            if(/(y+)/.test(fmt))
+                fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+            for(var k in o)
+                if(new RegExp("("+ k +")").test(fmt))
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+            return fmt;
+        }
+
+        var keys = ['DEV','http://10.10.31.230:8600/aop-solr/policy',
+            'TEST','http://10.10.31.18:8600/aop-solr/policy',
+            'SIT','http://10.10.32.234:8600/aop-solr/policy'
+        ];
+
+        function exeFullImport(){
+            var x = {
+                url:$('#ex-url').val(),
+                date:$('#ex-date').val()
+            };
+            var jsonArrayFinal = Base64.encode(JSON.stringify(x));
+            showresult('full-resp-show', '执行中...');
+            $.ajax({
+                type: "POST",
+                url: BASE_PATH + '/console/solr/fullImport',
+                data: jsonArrayFinal,
+                success:function(result) {
+                    showresult('full-resp-show', 'ok');
+                },
+                error:function(obj) {
+                    var respText;
+                    try {
+                        respText = obj.responseText;
+                        if (obj.status == 200) respText = Base64.decode(obj.responseText);
+                    } catch (e) {};
+                    showresult('full-resp-show', '操作失败。 \n'
+                            + 'status:     ' + obj.status + '\n'
+                            + 'statusText: ' + obj.statusText + '\n'
+                            + 'response: \n' + respText);
+                }
+            });
+        }
+
+
+        function exeUpdate(){
+            showresult('update-resp-show', '执行中...');
+            $.ajax({
+                type: "GET",
+                url: BASE_PATH + '/console/solr/update/' + $('#ex-id').val(),
+                success:function(result) {
+                    showresult('update-resp-show', 'ok');
+                },
+                error:function(obj) {
+                    var respText;
+                    try {
+                        respText = obj.responseText;
+                        if (obj.status == 200) respText = Base64.decode(obj.responseText);
+                    } catch (e) {};
+                    showresult('update-resp-show', '操作失败。 \n'
+                            + 'status:     ' + obj.status + '\n'
+                            + 'statusText: ' + obj.statusText + '\n'
+                            + 'response: \n' + respText);
+                }
+            });
+        }
+
+
+        $(function() {
+            $.ajaxSetup({
+                cache: false
+            });
+
+            var time1 = new Date().formatDate("yyyy-MM-dd HH:mm:ss");
+            $('#ex-date').val(time1);
+
+
+            for (var i = 0; i < keys.length; i++) {
+                var m = keys[i++];
+                $('#nor-key-1').append('<li><a href="javascript:changet(' + i + ');">' + m + '</a></li>');
+            }
+
+        });
+
+        function changet(i) {
+            $('#ex-url').val(keys[i]);
+        }
+
+        function showresult(b, text) {
+            $('#' + b).text('');
+            $('#' + b).text(text);
+        }
+
+
+    </script>
+</head>
+<body>
+
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar">1</span>
+                <span class="icon-bar">2</span>
+                <span class="icon-bar">3</span>
+            </button>
+            <a class="navbar-brand" href="#">开放平台 - 工具集</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="./redis.html">Redis数据维护</a></li>
+                <li class="active"><a href="./solr.html">Solr数据维护</a></li>
+                <li><a href="#contact">TODO2</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">TODO3 <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Nav header</li>
+                        <li><a href="#">Separated link</a></li>
+                        <li><a href="#">One more separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</div>
+
+<div class="container theme-showcase" role="main">
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <ul class="nav nav-pills" role="tablist">
+                <li role="presentation" class="active"><a href="#fullImport" aria-controls="fullImport" role="tab" data-toggle="tab">全量同步</a></li>
+                <li role="presentation"><a href="#singleUpdate" aria-controls="singleUpdate" role="tab" data-toggle="tab">单条同步</a></li>
+            </ul>
+            <div class="tab-content">
+                <!-- 全量导入 -->
+                <div role="tabpanel" class="tab-pane active" id="fullImport">
+                    <p>
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">地址：</button>
+                            <ul id="nor-key-1" class="dropdown-menu">
+                            </ul>
+                        </div>
+                        <input type="text" id="ex-url" class="form-control" />
+                    </div>
+                    </p>
+                    <p>
+                    <div class="input-group col-sm-5">
+                        <span class="input-group-addon">截止时间：</span>
+                        <input type="text" id="ex-date" class="form-control" placeholder="YYYY-MM-dd HH:mm:ss 格式" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" onclick="exeFullImport();"> 执 行</button>
+                        </span>
+                    </div>
+                    </p>
+                    <p>
+                        <div class="form-group">
+                            <textarea id="full-resp-show" class="form-control" style="height:300px" placeholder="结果"></textarea>
+                        </div>
+                    </p>
+                </div>
+
+
+                <div role="tabpanel" class="tab-pane" id="singleUpdate">
+                    <p>
+                    <div class="input-group col-sm-5">
+                        <span class="input-group-addon">政策ID：</span>
+                        <input type="text" id="ex-id" class="form-control" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" onclick="exeUpdate();"> 执 行</button>
+                        </span>
+                    </div>
+                    </p>
+                    <p>
+                    <div class="form-group">
+                        <textarea id="update-resp-show" class="form-control" style="height:300px" placeholder="结果"></textarea>
+                    </div>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

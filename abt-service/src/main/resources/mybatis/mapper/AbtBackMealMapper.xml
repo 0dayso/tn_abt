@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuniu.abt.mapper.AbtBackMealMapper">
+    <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtBackMeal">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        <constructor>
+            <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+            <arg column="airline_company" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="airline_company_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="cabin" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="journey_type" jdbcType="BIT" javaType="java.lang.Integer"/>
+            <arg column="passenger_type" jdbcType="BIT" javaType="java.lang.Integer"/>
+            <arg column="ticket_date_start" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="ticket_date_end" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="departure_date_start" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="departure_date_end" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="freight_channel" jdbcType="BIT" javaType="java.lang.Integer"/>
+            <arg column="rule_type" jdbcType="BIT" javaType="java.lang.Integer"/>
+            <arg column="city_option_type" jdbcType="BIT" javaType="java.lang.Integer"/>
+            <arg column="city_options" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="status" jdbcType="TINYINT" javaType="java.lang.Integer"/>
+            <arg column="operator_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="operator_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="add_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        id, airline_company, airline_company_name, cabin, journey_type, passenger_type, ticket_date_start,
+        ticket_date_end, departure_date_start, departure_date_end, freight_channel, rule_type,
+        city_option_type, city_options, status, operator_id, operator_name, add_time, update_time
+    </sql>
+
+    <sql id="Curd_Column_List">
+        a.id, a.airline_company, a.airline_company_name, a.cabin, a.journey_type, a.passenger_type, a.ticket_date_start,
+        a.ticket_date_end, a.departure_date_start, a.departure_date_end, a.freight_channel, a.rule_type,
+        a.city_option_type, a.city_options, a.status, a.operator_id, a.operator_name, a.add_time, a.update_time,
+        b.re_rule, b.re_calculate_type, b.re_remark, b.same_rule, b.same_calculate_type, b.same_remark
+    </sql>
+
+
+    <select id="queryCurdCount" resultType="java.lang.Integer" parameterType="com.tuniu.abt.intf.dto.backmeal.CurdBackMeal">
+    SELECT COUNT(DISTINCT a.id)
+        FROM abt_back_meal a
+        LEFT JOIN abt_back_meal_rule b ON a.id = b.id
+        WHERE 1=1
+        <if test="airlineCompany != null and airlineCompany != ''">
+            and a.airline_company = #{airlineCompany}
+        </if>
+        <if test="airlineCompanyName != null and airlineCompanyName != ''">
+            <bind name="namePattern" value="_parameter.airlineCompanyName + '%'"/>
+            and a.airline_company_name like #{namePattern}
+        </if>
+        <if test="cabin != null and cabin != ''">
+            <bind name="cabinPattern" value="'%' + _parameter.cabin + '%'"/>
+            and a.cabin like #{cabinPattern}
+        </if>
+        <if test="journeyType != null and journeyType != 0">
+            and a.journey_type = #{journeyType}
+        </if>
+        <if test="status != null and status != 0">
+            and a.status = #{status}
+        </if>
+    </select>
+
+    <select id="queryCurdList" resultType="com.tuniu.abt.intf.dto.backmeal.CurdBackMeal"
+            parameterType="com.tuniu.abt.intf.dto.backmeal.CurdBackMeal">
+        SELECT
+        <include refid="Curd_Column_List" />
+        FROM abt_back_meal a
+        LEFT JOIN abt_back_meal_rule b ON a.id = b.id
+        WHERE 1=1
+        <if test="airlineCompany != null and airlineCompany != ''">
+            and a.airline_company = #{airlineCompany}
+        </if>
+        <if test="airlineCompanyName != null and airlineCompanyName != ''">
+            <bind name="namePattern" value="_parameter.airlineCompanyName + '%'"/>
+            and a.airline_company_name like #{namePattern}
+        </if>
+        <if test="cabin != null and cabin != ''">
+            <bind name="cabinPattern" value="'%' + _parameter.cabin + '%'"/>
+            and a.cabin like #{cabinPattern}
+        </if>
+        <if test="journeyType != null and journeyType != 0">
+            and a.journey_type = #{journeyType}
+        </if>
+        <if test="status != null and status != 0">
+            and a.status = #{status}
+        </if>
+        ORDER BY
+        a.update_time DESC,
+        a.id DESC
+        limit #{start},#{limit}
+    </select>
+
+    <select id="findAlertRecords" resultType="com.tuniu.abt.intf.entity.AbtBackMeal">
+        select
+        <include refid="Base_Column_List" />
+        from abt_back_meal
+        where status = 2
+        and (ticket_date_end = #{date} or departure_date_end = #{date})
+        and NOT exists (select '' from abt_back_meal_alert_record z where abt_back_meal.id = z.back_meal_id)
+        limit 10000
+    </select>
+
+</mapper>

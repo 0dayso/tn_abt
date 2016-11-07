@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <appender name="FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>/opt/tuniu/logs/tomcat/app/${tomcat_app_base}/abt-log.log</File>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/opt/tuniu/logs/tomcat/app/${tomcat_app_base}/abt-log.%d{yyyy-MM-dd}.%i.log
+            </FileNamePattern>
+            <maxHistory>7</maxHistory>
+            <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </TimeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <layout>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{0} - %msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <!-- 业务跟踪日志 -->
+    <logger name="com.tuniu.abt.tracer">
+        <level value="INFO"/>
+    </logger>
+    <logger name="org.apache.http">
+        <level value="warn"/>
+    </logger>
+    <logger name="com.tuniu.abt">
+        <level value="INFO"/>
+    </logger>
+    <logger name="com.tuniu.abt.mapper">
+        <level value="DEBUG"/>
+    </logger>
+    <logger name="abt.request.body">
+        <level value="info"/>
+    </logger>
+    <logger name="com.tuniu.ngsp.ddg">
+        <level value="warn"/>
+    </logger>
+    <root level="WARN">
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>开放平台 - 工具集 - Redis数据维护</title>
+    <link rel="stylesheet" href="http://libs.useso.com/js/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://libs.useso.com/js/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <script src="../../js/setting.js"></script>
+    <script src="../../js/base64.js"></script>
+
+    <script src="http://libs.useso.com/js/jquery/2.1.0/jquery.js"></script>
+    <script src="http://libs.useso.com/js/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script>
+        var COMMANDS = {};
+        var keys = ['政策信息','aop:main:policy:info:',
+                    '政策查询','aop:main:policy:query:',
+                    '关联人信息','aop:main:person:info:',
+                    '资源信息','aop:main:res:info:',
+                    '待处理数量','aop:main:order:to_deal:count:',
+                    '供应商','aop:main:vendor:index:id:'
+        ];
+
+        $(function() {
+            $.ajaxSetup({
+                cache: false
+            });
+
+
+            for (var i = 0; i < keys.length; i++) {
+                var m = keys[i++];
+                $('#nor-key').append('<li><a href="javascript:changet(' + i + ');">' + m + '</a></li>');
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: BASE_PATH + '/console/redis/command',
+                dataType:'json',
+                success:function(result) {
+                    COMMANDS = result;
+                    buildSelection();
+                    $('#ex-target').change();
+                },
+                error:function()
+                {
+                    alert("载入命令失败");
+                }
+            });
+
+            $('#ex-target').on('change',function(){
+                var k = $("#ex-target option:selected").text();
+                var val = COMMANDS[k];
+                $('#ex-param').attr('placeholder', val[0]);
+
+                var method = $('#ex-method');
+                method.empty();
+                for (var i = 1; i < val.length; i++) {
+                    var option = $("<option>").text(val[i]).val(val[i]);
+                    method.append(option);
+                }
+            });
+
+        });
+
+        function changet(i) {
+            $('#ex-param').val(keys[i]);
+        }
+
+        function buildSelection() {
+            var target = $("#ex-target");
+            target.empty();
+            var arr = new Array();
+            var i = 0;
+            for (k in COMMANDS) {
+                arr[i++] = k;
+            }
+            arr.sort();
+            for (var i = 0; i < arr.length; i++){
+                var option = $("<option>").text(arr[i]).val(arr[i]);
+                target.append(option);
+            }
+        }
+
+        function exe_submit(){
+            var x = {
+                target:$('#ex-target').val(),
+                method:$('#ex-method').val(),
+                params:$('#ex-param').val()
+            };
+            var jsonArrayFinal = Base64.encode(JSON.stringify(x));
+            //$('#stat').text('');
+            $.ajax({
+                type: "POST",
+                url: BASE_PATH + '/console/redis/execute',
+                data: jsonArrayFinal,
+                success:function(result) {
+                    try {
+                        result  = eval(result);
+                        if (!result) {
+                            result = 'empty';
+                        } else {
+                            result = JSON.stringify(result, null, 2)
+                        }
+                    } catch (e) {}
+                    showresult(result);
+                },
+                error:function(obj) {
+                    var respText;
+                    try {
+                        respText = obj.responseText;
+                        if (obj.status == 200) respText = Base64.decode(obj.responseText);
+                    } catch (e) {};
+                    showresult('操作失败。 \n'
+                            + 'status:     ' + obj.status + '\n'
+                            + 'statusText: ' + obj.statusText + '\n'
+                            + 'response: \n' + respText);
+                }
+            });
+        }
+
+        function showresult(text) {
+            $('#resp_show').text('');
+            $('#resp_show').text(text);
+        }
+
+
+    </script>
+</head>
+<body>
+
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar">1</span>
+                <span class="icon-bar">2</span>
+                <span class="icon-bar">3</span>
+            </button>
+            <a class="navbar-brand" href="#">开放平台 - 工具集</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="./redis.html">Redis数据维护</a></li>
+                <li><a href="./solr.html">Solr数据维护</a></li>
+                <li><a href="#contact">TODO2</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">TODO3 <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Nav header</li>
+                        <li><a href="#">Separated link</a></li>
+                        <li><a href="#">One more separated link</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</div>
+
+<div class="container theme-showcase" role="main">
+
+    <div class="row">
+        <div class="col-sm-5">
+            <p>
+                <div class="input-group">
+                    <span class="input-group-addon">目标：</span>
+                    <select id="ex-target" class="form-control"></select>
+                </div>
+            </p>
+            <p>
+                <div class="input-group">
+                    <span class="input-group-addon">方法：</span>
+                    <select id="ex-method" class="form-control"></select>
+                </div>
+            </p>
+            <p>
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">参数：</button>
+                        <ul id="nor-key" class="dropdown-menu">
+                        </ul>
+                    </div>
+                    <input id="ex-param" type="text" class="form-control" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" onclick="exe_submit();"> 执 行</button>
+                    </span>
+                </div>
+            </p>
+            <p id="target-desc" class="help-block"></p>
+        </div>
+
+        <div class="col-sm-12">
+            <p>
+                <div class="form-group">
+                    <textarea id="resp_show" class="form-control" style="height:500px" placeholder="结果"></textarea>
+                </div>
+            </p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

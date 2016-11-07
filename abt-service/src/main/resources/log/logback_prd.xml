@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <appender name="FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>/opt/tuniu/logs/tomcat/app/${tomcat_app_base}/abt-log.log</File>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/opt/tuniu/logs/tomcat/app/${tomcat_app_base}/abt-log.%d{yyyy-MM-dd}.%i.log
+            </FileNamePattern>
+            <maxHistory>7</maxHistory>
+            <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </TimeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <layout>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{0} - %msg%n</Pattern>
+        </layout>
+    </appender>
+
+
+    <!-- 业务跟踪日志 -->
+    <appender name="ABT_TRACER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>/opt/tuniu/logs/tomcat/app/${tomcat_app_base}/abtTracer.log</File>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/opt/tuniu/logs/tomcat/app/${tomcat_app_base}/abtTracer.%d{yyyy-MM-dd}.%i.log
+            </FileNamePattern>
+            <maxHistory>7</maxHistory>
+            <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </TimeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <layout>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{0} - %msg%n</Pattern>
+        </layout>
+    </appender>
+    <appender name="ABT_TRACER_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>90</discardingThreshold>
+        <queueSize>1024</queueSize>
+        <appender-ref ref="ABT_TRACER" />
+    </appender>
+
+    <!-- 业务跟踪日志 -->
+    <logger name="com.tuniu.abt.tracer" level="INFO" additivity="false">
+        <appender-ref ref="ABT_TRACER_ASYNC"/>
+    </logger>
+
+    <logger name="com.tuniu.abt">
+        <level value="info"/>
+    </logger>
+    <root level="WARN">
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

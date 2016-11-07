@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuniu.abt.mapper.AbtPnrMainMapper">
+    <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtPnrMain">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        <constructor >
+            <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long" />
+            <arg column="request_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+            <arg column="order_id" jdbcType="BIGINT" javaType="java.lang.Long" />
+            <arg column="pnr" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="out_order_id" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="out_main_order_id" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="external_no" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="time_limit" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="act_time_limit" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="policy_id" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="policy_type" jdbcType="TINYINT" javaType="java.lang.Integer" />
+            <arg column="dfp_action_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="air_company_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="ticketing_carrier" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="order_status_display" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="status" jdbcType="BIT" javaType="java.lang.Integer" />
+            <arg column="pay_status" jdbcType="BIT" javaType="java.lang.Integer" />
+            <arg column="add_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+            <arg column="vendor_id" jdbcType="TINYINT" javaType="java.lang.Integer" />
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List" >
+        <!--
+          WARNING - @mbggenerated
+        -->
+        id, request_id, order_id, pnr, out_order_id, out_main_order_id, external_no, time_limit,
+        act_time_limit, policy_id, policy_type, dfp_action_code, air_company_code, ticketing_carrier,
+        order_status_display, status, pay_status, add_time, update_time, vendor_id
+    </sql>
+    <sql id="Prefix_Column_List">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        m.id, m.request_id, m.order_id, m.pnr, m.out_order_id, m.out_main_order_id, m.external_no, m.time_limit,
+        m.act_time_limit, m.policy_id, m.policy_type, m.dfp_action_code, m.air_company_code, m.ticketing_carrier,
+        m.order_status_display, m.status, m.pay_status, m.add_time, m.update_time, m.vendor_id
+    </sql>
+
+    <resultMap id="AbtTicketResultMap" type="com.tuniu.abt.intf.entity.AbtTicketMain">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="request_id" jdbcType="BIGINT" property="requestId" />
+        <result column="pnr" jdbcType="VARCHAR" property="pnr" />
+        <result column="new_pnr" jdbcType="VARCHAR" property="newPnr" />
+        <result column="ticket_no" jdbcType="VARCHAR" property="ticketNo" />
+        <result column="passenger_name" jdbcType="VARCHAR" property="passengerName" />
+        <result column="passenger_type" jdbcType="BIT" property="passengerType" />
+        <result column="flight_no" jdbcType="VARCHAR" property="flightNo" />
+        <result column="rph" jdbcType="BIT" property="rph" />
+        <result column="seat_code" jdbcType="VARCHAR" property="seatCode" />
+        <result column="org_airport_code" jdbcType="VARCHAR" property="orgAirportCode" />
+        <result column="dst_airport_code" jdbcType="VARCHAR" property="dstAirportCode" />
+        <result column="org_time" jdbcType="TIMESTAMP" property="orgTime" />
+        <result column="org_price" jdbcType="DECIMAL" property="orgPrice" />
+        <result column="floor_price" jdbcType="DECIMAL" property="floorPrice" />
+        <result column="fuel_surcharge" jdbcType="DECIMAL" property="fuelSurcharge" />
+        <result column="airport_tax" jdbcType="DECIMAL" property="airportTax" />
+        <result column="status" jdbcType="BIT" property="status" />
+        <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="solution_id" jdbcType="VARCHAR" property="solutionId" />
+        <result column="solution_name" jdbcType="VARCHAR" property="solutionName" />
+        <result column="person_id" jdbcType="BIGINT" property="personId" />
+        <result column="sale_price" jdbcType="DECIMAL" property="salePrice" />
+    </resultMap>
+
+    <select id="findPnrMainList" parameterType="java.util.List" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List">
+        </include>
+        FROM
+        abt_pnr_main
+        WHERE pnr IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findByFlightItemIdAndOrderId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Prefix_Column_List"/>
+        FROM
+        abt_pnr_main m
+        INNER JOIN
+        abt_booking_request r
+        ON
+        m.request_id = r.id
+        where
+        r.flight_item_id = #{flightItemId, jdbcType=BIGINT}
+        AND
+        r.order_id = #{orderId, jdbcType=BIGINT}
+    </select>
+
+    <update id="updatePayStatus">
+        UPDATE
+        abt_pnr_main m
+        INNER JOIN
+        abt_booking_request r
+        ON
+        m.request_id = r.id
+        SET m.status = #{status}
+        WHERE
+        r.flight_item_id = #{flightItemId, jdbcType=BIGINT}
+        AND
+        r.order_id = #{orderId, jdbcType=BIGINT}
+        AND m.pnr = #{pnr, jdbcType=VARCHAR}
+    </update>
+
+    <select id="findByStatusAndSpecificTimeInterval" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        abt_pnr_main
+        WHERE status = #{status}
+        AND add_time BETWEEN #{from} AND #{to}
+    </select>
+
+    <update id="updateStatusByOrderIdAndPnr">
+        UPDATE
+        abt_pnr_main
+        SET status = #{status}
+        WHERE
+        order_id = #{orderId}
+        AND
+        pnr = #{pnr}
+    </update>
+
+    <select id="buildAbtTicketMainByBookData" resultMap="AbtTicketResultMap">
+        SELECT
+        t2.pnr,
+        t3.book_name AS 'passenger_name',
+        t3.passenger_type,
+        t3.person_id,
+        t4.flight_no,
+        t4.rph,
+        t4.seat_code,
+        t4.org_airport_code,
+        t4.dst_airport_code,
+        t4.org_time,
+        t5.org_price,
+        t5.floor_price,
+        t5.sale_price,
+        t5.fuel_surcharge,
+        t5.airport_tax
+        FROM abt_booking_request t1
+        LEFT JOIN abt_pnr_main t2 ON t1.id = t2.request_id
+        LEFT JOIN abt_pnr_passenger t3 ON t2.id = t3.pnr_id
+        LEFT JOIN abt_pnr_flight t4 ON t3.pnr_id = t4.pnr_id
+        LEFT JOIN abt_pnr_price t5 ON t4.pnr_id = t5.pnr_id AND t3.passenger_type = t5.passenger_type
+        WHERE t1.order_id = #{orderId}
+        AND t1.flight_item_id = #{flightItemId}
+    </select>
+</mapper>

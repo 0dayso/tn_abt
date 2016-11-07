@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuniu.abt.mapper.AbtJobItemExecutionContextMapper" >
+  <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtJobItemExecutionContext" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="entry_id" property="entryId" jdbcType="BIGINT" />
+    <result column="job_id" property="jobId" jdbcType="BIGINT" />
+    <result column="retry_count" property="retryCount" jdbcType="INTEGER" />
+    <result column="add_time" property="addTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, entry_id, job_id, retry_count, add_time, update_time
+  </sql>
+  <sql id="Prefix_Column_List" >
+    ec.id, ec.entry_id, ec.job_id, ec.retry_count, ec.add_time, ec.update_time
+  </sql>
+
+  <select id="findByEntryIdAndJobName" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Prefix_Column_List"/>
+    FROM
+    abt_job_item_execution_context ec
+    INNER JOIN
+    abt_job_item_context c
+    ON
+    c.id = ec.job_id
+    WHERE
+    ec.entry_id = #{entryId}
+    AND
+    c.job_name = #{jobName}
+  </select>
+</mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean" />
+
+    <bean id="jsonMessageConverter" class="com.tuniu.vla.base.framework.Base64JsonHttpMessageConverter" />
+
+    <mvc:interceptors>
+        <bean id="corsInterceptor" class="com.tuniu.abt.base.framework.CorsInterceptor"/>
+        <ref bean="actionTracerInterceptor"/>
+    </mvc:interceptors>
+
+    <mvc:cors>
+        <mvc:mapping path="/**"/>
+    </mvc:cors>
+
+    <mvc:annotation-driven conversion-service="conversionService" validator="validator">
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter"/>
+        </mvc:message-converters>
+        <mvc:argument-resolvers>
+            <bean class="com.tuniu.vla.base.framework.JsonMapperArgumentResolver"/>
+        </mvc:argument-resolvers>
+        <mvc:return-value-handlers>
+            <bean class="com.tuniu.vla.base.framework.ResponseJsonMethodProcessor">
+                <property name="messageConverter" ref="jsonMessageConverter"/>
+                <property name="beanWrappers">
+                    <list>
+                        <bean class="com.tuniu.vla.base.framework.ApiRespWrapper"/>
+                        <bean class="com.tuniu.abt.base.framework.DefaultBeanTransIdWrapper"/>
+                    </list>
+                </property>
+            </bean>
+        </mvc:return-value-handlers>
+    </mvc:annotation-driven>
+
+
+    <bean class="com.tuniu.vla.base.framework.RequestMappingHandlerPostProcessor">
+        <property name="removedArgumentResolvers">
+            <list>
+                <value>org.springframework.web.method.annotation.MapMethodProcessor</value>
+            </list>
+        </property>
+        <property name="removedReturnValueHandlers">
+            <list>
+                <value>org.springframework.web.servlet.mvc.method.annotation.ViewNameMethodReturnValueHandler
+                </value>
+                <value>org.springframework.web.method.annotation.MapMethodProcessor</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="safeDefaultCorsProcessor" class="com.tuniu.vla.base.framework.SafeDefaultCorsProcessor" />
+
+
+    <bean id="exceptionMessageUtils" class="com.tuniu.vla.base.utils.ExceptionMessageUtils"/>
+
+    <bean class="com.tuniu.abt.base.ex.AbtExceptionResolver">
+        <property name="exceptionMessageUtils" ref="exceptionMessageUtils"/>
+    </bean>
+
+
+
+</beans>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuniu.abt.mapper.AbtTracerLogMapper">
+  <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtTracerLog">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="trace_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="level" javaType="java.lang.Integer" jdbcType="BIT" />
+      <arg column="biz_action" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="biz_cmd" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="biz_type" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="exec_start" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="exec_end" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="exec_duration" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="exec_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+      <arg column="error_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="error_desc" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="session_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="vendor_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="system_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="order_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="add_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    id, trace_id, level, biz_action, biz_cmd, biz_type, exec_start, exec_end, exec_duration, 
+    exec_status, error_code, error_desc, session_id, vendor_id, system_id, order_id, 
+    add_time
+  </sql>
+</mapper>

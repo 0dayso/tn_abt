@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuniu.abt.mapper.AbtPnrPriceMapper">
+    <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtPnrPrice">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        <constructor>
+            <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+            <arg column="pnr_id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+            <arg column="passenger_type" jdbcType="BIT" javaType="java.lang.Integer"/>
+            <arg column="price_type" jdbcType="BIT" javaType="java.lang.Integer"/>
+            <arg column="org_price" jdbcType="DECIMAL" javaType="java.math.BigDecimal"/>
+            <arg column="sale_price" jdbcType="DECIMAL" javaType="java.math.BigDecimal"/>
+            <arg column="floor_price" jdbcType="DECIMAL" javaType="java.math.BigDecimal"/>
+            <arg column="back_bate" jdbcType="DECIMAL" javaType="java.lang.Float"/>
+            <arg column="back_cash" jdbcType="DECIMAL" javaType="java.lang.Float"/>
+            <arg column="invoice_cost" jdbcType="DECIMAL" javaType="java.lang.Float"/>
+            <arg column="fuel_surcharge" jdbcType="DECIMAL" javaType="java.lang.Float"/>
+            <arg column="airport_tax" jdbcType="DECIMAL" javaType="java.lang.Float"/>
+            <arg column="sale_id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+            <arg column="add_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        id, pnr_id, passenger_type, price_type, org_price, sale_price, floor_price, back_bate,
+        back_cash, invoice_cost, fuel_surcharge, airport_tax, sale_id, add_time, update_time
+    </sql>
+
+
+    <sql id="Prefix_Column_List">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        p.id, p.pnr_id, p.passenger_type, p.price_type, p.org_price, p.sale_price, p.floor_price, p.back_bate,
+        p.back_cash, p.invoice_cost, p.fuel_surcharge, p.airport_tax, p.sale_id, p.add_time, p.update_time
+    </sql>
+
+    <select id="findByPnrAndPriceType" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Prefix_Column_List"/>
+        FROM abt_pnr_price p
+        INNER JOIN abt_ticket_main m
+        ON p.pnr_id = m.id
+        WHERE m.pnr=#{pnr}
+        AND p.price_type = #{priceType}
+    </select>
+
+    <select id="findByPnrAndFlightItemIdAndOrderId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Prefix_Column_List"/>
+        FROM
+        abt_pnr_price p
+        INNER JOIN
+        abt_pnr_main m
+        ON
+        p.pnr_id = m.id
+        INNER JOIN
+        abt_booking_request r
+        ON m.request_id = r.id
+        WHERE
+        m.pnr = #{pnr}
+        AND
+        r.flight_item_id = #{flightItemId}
+        AND
+        r.order_id = #{orderId}
+    </select>
+
+    <select id="findByPnrAndPriceTypeAndFlightItemIdAndOrderId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Prefix_Column_List"/>
+        FROM
+        abt_pnr_price p
+        INNER JOIN
+        abt_pnr_main m
+        ON
+        p.pnr_id = m.id
+        INNER JOIN
+        abt_booking_request r
+        ON m.request_id = r.id
+        WHERE
+        m.pnr = #{pnr}
+        AND
+        r.flight_item_id = #{flightItemId}
+        AND
+        r.order_id = #{orderId}
+    </select>
+
+    <insert id="saveAbtPnrPriceList" parameterType="java.util.List">
+        INSERT INTO abt_pnr_price
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            pnr_id,
+            price_type,
+            org_price,
+            sale_price,
+            floor_price,
+            back_bate,
+            back_cash,
+            invoice_cost,
+            fuel_surcharge,
+            airport_tax,
+            sale_id,
+            add_time,
+            update_time
+        </trim>
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.pnrId},
+                #{item.priceType},
+                #{item.orgPrice},
+                #{item.salePrice},
+                #{item.floorPrice},
+                #{item.backBate},
+                #{item.backCash},
+                #{item.invoiceCost},
+                #{item.fuelSurcharge},
+                #{item.airportTax},
+                #{item.saleId},
+                now(),
+                now()
+            </trim>
+        </foreach>
+    </insert>
+</mapper>

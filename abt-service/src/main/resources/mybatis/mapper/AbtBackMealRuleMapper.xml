@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuniu.abt.mapper.AbtBackMealRuleMapper">
+  <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtBackMealRule">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="re_rule" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="re_calculate_type" javaType="java.lang.Integer" jdbcType="BIT" />
+      <arg column="re_remark" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="same_rule" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="same_calculate_type" javaType="java.lang.Integer" jdbcType="BIT" />
+      <arg column="same_remark" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    id, re_rule, re_calculate_type, re_remark, same_rule, same_calculate_type, same_remark
+  </sql>
+</mapper>

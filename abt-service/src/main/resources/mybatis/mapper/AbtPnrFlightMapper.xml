@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuniu.abt.mapper.AbtPnrFlightMapper">
+    <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtPnrFlight">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        <constructor>
+            <idArg column="id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+            <arg column="pnr_id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+            <arg column="flight_no" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="rph" jdbcType="BIT" javaType="java.lang.Integer"/>
+            <arg column="seat_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="plane_type" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="org_city_code" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="dst_city_code" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="org_city_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="dst_city_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="org_airport_code" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="dst_airport_code" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="org_airport_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="dst_airport_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="org_airport_terminal" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="dst_airport_terminal" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="org_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="dst_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="add_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        id, pnr_id, flight_no, rph, seat_code, plane_type, org_city_code, dst_city_code,
+        org_city_name, dst_city_name, org_airport_code, dst_airport_code, org_airport_name,
+        dst_airport_name, org_airport_terminal, dst_airport_terminal, org_time, dst_time,
+        add_time, update_time
+    </sql>
+    <sql id="Prefix_Column_List">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        f.id, f.pnr_id, f.flight_no, f.rph, f.seat_code,  f.plane_type, f.org_city_code, f.dst_city_code,
+        f.org_city_name, f.dst_city_name, f.org_airport_code, f.dst_airport_code, f.org_airport_name,
+        f.dst_airport_name, f.org_airport_terminal, f.dst_airport_terminal, f.org_time, f.dst_time,
+        f.add_time, f.update_time
+    </sql>
+    <select id="findByPnrAndFlightNo" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Prefix_Column_List"/>
+        FROM abt_pnr_flight f
+        INNER abt_pnr_main m
+        ON f.pnr_id = m.id
+        WHERE f.flight_no = #{flightNo}
+        AND m.pnr = #{pnr}
+    </select>
+
+    <select id="findByPnrAndFlightItemIdAndOrderId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Prefix_Column_List"/>
+        FROM
+        abt_pnr_flight f
+        INNER JOIN
+        abt_pnr_main m
+        ON
+        f.pnr_id = m.id
+        INNER JOIN
+        abt_booking_request r
+        ON m.request_id = r.id
+        WHERE
+        m.pnr = #{pnr}
+        AND
+        r.flight_item_id = #{flightItemId}
+        AND
+        r.order_id = #{orderId}
+    </select>
+
+    <insert id="saveAbtPnrFlightList" parameterType="java.util.List">
+        INSERT INTO abt_pnr_flight
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            pnr_id,
+            flight_no,
+            rph,
+            seat_code,
+            plane_type,
+            org_city_code,
+            dst_city_code,
+            org_city_name,
+            dst_city_name,
+            org_airport_code,
+            dst_airport_code,
+            org_airport_name,
+            dst_airport_name,
+            org_airport_terminal,
+            dst_airport_terminal,
+            org_time,
+            dst_time,
+            add_time,
+            update_time
+        </trim>
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.pnrId},
+                #{item.flightNo},
+                #{item.rph},
+                #{item.seatCode},
+                #{item.planeType},
+                #{item.orgCityCode},
+                #{item.dstCityCode},
+                #{item.orgCityName},
+                #{item.dstCityName},
+                #{item.orgAirportCode},
+                #{item.dstAirportCode},
+                #{item.orgAirportName},
+                #{item.dstAirportName},
+                #{item.orgAirportTerminal},
+                #{item.dstAirportTerminal},
+                #{item.orgTime},
+                #{item.dstTime},
+                now(),
+                now()
+            </trim>
+        </foreach>
+    </insert>
+
+    <select id="queryMaliceBookingFlights" resultType="com.tuniu.abt.intf.dto.common.MaliceFlightDto">
+        SELECT
+            COUNT(c.person_id) AS maliceOccupyNum,
+            c.flight_no,
+            c.departure_date,
+            c.org_city_code,
+            c.dst_city_code,
+            c.org_airport_code,
+            c.dst_airport_code,
+            c.org_time,
+            c.dst_time,
+            c.vendor_id,
+            GROUP_CONCAT(distinct c.order_id) AS order_id
+        FROM
+            (
+                SELECT
+                    flight.pnr_id,
+                    flight.flight_no,
+                    DATE_FORMAT(flight.org_time, '%Y-%m-%d') AS departure_date,
+                    flight.org_city_code,
+                    flight.dst_city_code,
+                    flight.org_airport_code,
+                    flight.dst_airport_code,
+                    person.id AS person_id,
+                    DATE_FORMAT(flight.org_time,'%H:%i') AS org_time,
+                    DATE_FORMAT(flight.dst_time,'%H:%i') AS dst_time,
+                    CONCAT(main.order_id,':',main.pnr,':',main.id) AS order_id,
+                    req.vendor_id
+                FROM
+                    abt_pnr_flight AS flight
+                    LEFT JOIN abt_pnr_main AS main ON flight.pnr_id = main.id
+                    LEFT JOIN abt_pnr_passenger AS person ON person.pnr_id = main.id
+                    LEFT JOIN abt_booking_request AS req ON req.id = main.request_id
+                WHERE
+                    req.vendor_id != 6
+                    AND main.status IN(0,1,3)
+                    AND req.system_id IN (51, 52, 53, 54, 55, 56, 57, 58, 59)
+                    AND (main.add_time between #{start}  and #{end} )
+            ) AS c
+        GROUP BY
+            c.flight_no,
+            c.departure_date
+        HAVING
+            maliceOccupyNum >= #{maliceNum}
+    </select>
+
+    <select id="queryMaliceBookingFlightsByDeparture" resultType="com.tuniu.abt.intf.dto.common.MaliceFlightDto">
+        SELECT
+            COUNT(c.person_id) AS maliceOccupyNum,
+            c.flight_no,
+            c.departure_date,
+            c.org_city_code,
+            c.dst_city_code,
+            c.org_airport_code,
+            c.dst_airport_code,
+            c.org_time,
+            c.dst_time,
+            c.vendor_id,
+            GROUP_CONCAT(distinct c.order_id) AS order_id
+        FROM
+            (
+                SELECT
+                    flight.pnr_id,
+                    flight.flight_no,
+                    DATE_FORMAT(flight.org_time, '%Y-%m-%d') AS departure_date,
+                    flight.org_city_code,
+                    flight.dst_city_code,
+                    flight.org_airport_code,
+                    flight.dst_airport_code,
+                    person.id AS person_id,
+                    DATE_FORMAT(flight.org_time,'%H:%i') AS org_time,
+                    DATE_FORMAT(flight.dst_time,'%H:%i') AS dst_time,
+                    CONCAT(main.order_id,':',main.pnr,':',main.id) AS order_id,
+                    req.vendor_id
+                FROM
+                    abt_pnr_flight AS flight
+                    LEFT JOIN abt_pnr_main AS main ON flight.pnr_id = main.id
+                    LEFT JOIN abt_pnr_passenger AS person ON person.pnr_id = main.id
+                    LEFT JOIN abt_booking_request AS req ON req.id = main.request_id
+                WHERE
+                    req.vendor_id != 6
+                    AND main.status IN(0,1,3)
+                    AND main.add_time > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+                    AND req.system_id IN (51, 52, 53, 54, 55, 56, 57, 58, 59)
+                    AND flight.org_time > #{date}
+            ) AS c
+        GROUP BY
+            c.flight_no,
+            c.departure_date
+        HAVING
+            maliceOccupyNum >= #{maliceNum}
+    </select>
+
+    <select id="queryMaliceBookingFlightsForAlert" resultType="com.tuniu.abt.intf.dto.common.MaliceFlightDto">
+        SELECT
+            COUNT(c.person_id) AS maliceOccupyNum,
+            c.flight_no,
+            c.departure_date,
+            c.org_city_code,
+            c.dst_city_code,
+            c.org_airport_code,
+            c.dst_airport_code,
+            c.org_time,
+            c.dst_time,
+            c.vendor_id,
+            GROUP_CONCAT(distinct c.order_id) AS order_id
+        FROM
+            (
+                SELECT
+                    flight.pnr_id,
+                    flight.flight_no,
+                    DATE_FORMAT(flight.org_time, '%Y-%m-%d') AS departure_date,
+                    flight.org_city_code,
+                    flight.dst_city_code,
+                    flight.org_airport_code,
+                    flight.dst_airport_code,
+                    person.id AS person_id,
+                    DATE_FORMAT(flight.org_time,'%H:%i') AS org_time,
+                    DATE_FORMAT(flight.dst_time,'%H:%i') AS dst_time,
+                    CONCAT(main.order_id,':',main.pnr,':',main.id) AS order_id,
+                    req.vendor_id
+                FROM
+                    abt_pnr_flight AS flight
+                    LEFT JOIN abt_pnr_main AS main ON flight.pnr_id = main.id
+                    LEFT JOIN abt_pnr_passenger AS person ON person.pnr_id = main.id
+                    LEFT JOIN abt_booking_request AS req ON req.id = main.request_id
+                WHERE
+                    req.vendor_id != 6
+                    AND main.status IN(0,1,3)
+                    AND main.add_time > DATE_SUB(CURDATE(), INTERVAL 10 DAY)
+                    AND req.system_id IN (51, 52, 53, 54, 55, 56, 57, 58, 59)
+                    <if test="beginTime !=null">
+                      AND flight.org_time > #{beginTime}
+                    </if>
+                    AND flight.org_time between #{appointTime} and DATE_ADD(#{appointTime}, INTERVAL 1 DAY)
+            ) AS c
+        GROUP BY
+            c.flight_no,
+            c.departure_date
+        HAVING
+            maliceOccupyNum >= #{maliceNum}
+    </select>
+
+</mapper>

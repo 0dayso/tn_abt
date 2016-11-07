@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuniu.abt.mapper.AbtPnrPassengerMapper">
+    <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtPnrPassenger">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+            <arg column="pnr_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+            <arg column="full_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="book_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="first_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="last_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="passenger_type" javaType="java.lang.Integer" jdbcType="BIT" />
+            <arg column="ref_psg_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+            <arg column="identity_type" javaType="java.lang.Integer" jdbcType="BIT" />
+            <arg column="person_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+            <arg column="birth_date" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <arg column="gender" javaType="java.lang.Integer" jdbcType="BIT" />
+            <arg column="status" javaType="java.lang.Integer" jdbcType="BIT" />
+            <arg column="add_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+            <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        id, pnr_id, full_name, book_name, first_name, last_name, passenger_type, ref_psg_id,
+        identity_type, person_id, birth_date, gender, status, add_time, update_time
+    </sql>
+
+    <sql id="Prefix_Column_List">
+        <!--
+          WARNING - @mbggenerated
+        -->
+        p.id, p.pnr_id, p.full_name, p.book_name, p.first_name, p.last_name, p.passenger_type, p.ref_psg_id, p.identity_type,
+        p.person_id, p.birth_date, p.gender, p.status, p.add_time, p.update_time
+    </sql>
+
+    <select id="findByPnrAndFlightItemIdAndOrderId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Prefix_Column_List"/>
+        FROM
+        abt_pnr_passenger p
+        INNER JOIN
+        abt_pnr_main m
+        ON
+        p.pnr_id = m.id
+        INNER JOIN
+        abt_booking_request r
+        ON m.request_id = r.id
+        WHERE
+        m.pnr = #{pnr}
+        AND
+        r.flight_item_id = #{flightItemId}
+        AND
+        r.order_id = #{orderId}
+    </select>
+
+    <select id="findByPnrAndFlightItemIdAndOrderIdAndName" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Prefix_Column_List"/>
+        FROM
+        abt_pnr_passenger p
+        INNER JOIN
+        abt_pnr_main m
+        ON
+        p.pnr_id = m.id
+        INNER JOIN
+        abt_booking_request r
+        ON m.request_id = r.id
+        WHERE
+        m.pnr = #{pnr}
+        AND
+        r.flight_item_id = #{flightItemId}
+        AND
+        r.order_id = #{orderId}
+        AND
+        p.full_name = #{name}
+    </select>
+
+    <insert id="saveAbtPnrPassengerList" parameterType="java.util.List">
+        INSERT INTO abt_pnr_passenger
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            pnr_id,
+            full_name,
+            book_name,
+            first_name,
+            last_name,
+            passenger_type,
+            ref_psg_id,
+            identity_type,
+            person_id,
+            birth_date,
+            gender,
+            status,
+            add_time,
+            update_time
+        </trim>
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.pnrId},
+                #{item.fullName},
+                #{item.bookName},
+                #{item.firstName},
+                #{item.lastName},
+                #{item.passengerType},
+                #{item.refPsgId},
+                #{item.identityType},
+                #{item.personId},
+                #{item.birthDate},
+                #{item.gender},
+                #{item.status},
+                now(),
+                now()
+            </trim>
+        </foreach>
+    </insert>
+
+    <select id="findByOrderIdAndPnrAndPersonId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Prefix_Column_List"/>
+        FROM
+        abt_pnr_passenger p
+        INNER JOIN
+        abt_pnr_main m
+        ON
+        p.pnr_id = m.id
+        WHERE
+        m.pnr = #{pnr}
+        AND
+        m.order_id = #{orderId}
+        AND
+        p.person_id = #{personId}
+    </select>
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tuniu.abt.mapper.AbtTicketMainMapper">
+  <resultMap id="BaseResultMap" type="com.tuniu.abt.intf.entity.AbtTicketMain">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <constructor>
+      <idArg column="id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="request_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="pnr" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="new_pnr" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="ticket_no" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="passenger_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="passenger_type" javaType="java.lang.Integer" jdbcType="BIT" />
+      <arg column="flight_no" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="rph" javaType="java.lang.Integer" jdbcType="BIT" />
+      <arg column="seat_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="org_airport_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="dst_airport_code" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="org_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="org_price" javaType="java.lang.Float" jdbcType="DECIMAL" />
+      <arg column="floor_price" javaType="java.lang.Float" jdbcType="DECIMAL" />
+      <arg column="fuel_surcharge" javaType="java.lang.Float" jdbcType="DECIMAL" />
+      <arg column="airport_tax" javaType="java.lang.Float" jdbcType="DECIMAL" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="BIT" />
+      <arg column="add_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="solution_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="solution_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="person_id" javaType="java.lang.Long" jdbcType="BIGINT" />
+      <arg column="sale_price" javaType="java.lang.Float" jdbcType="DECIMAL" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    id, request_id, pnr, new_pnr, ticket_no, passenger_name, passenger_type, flight_no,
+    rph, seat_code, org_airport_code, dst_airport_code, org_time, org_price, floor_price,
+    fuel_surcharge, airport_tax, status, add_time, update_time, solution_id, solution_name,
+    person_id, sale_price
+  </sql>
+
+</mapper>
